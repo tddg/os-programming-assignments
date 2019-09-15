@@ -35,7 +35,7 @@ What's quite interesting is how easy it is to parallelize: many worker threads c
 ## Code Overview
 
 We give you here the
-[`imkv.h`](https://github.com/tddg/os-programming-assignments/imkv.h)
+[`imkv.h`](https://github.com/tddg/os-programming-assignments/blob/master/imkv.h)
 header file that specifies exactly what you must build in your in-memory KVS library:
 
 ```
