@@ -50,6 +50,8 @@ typedef enum {
 	HT_INSERT_FAILED,
 	HT_FOUND,
 	HT_NOTFOUND,
+	HT_DELETE_OK,
+	HT_DELETE_FAILED,
 } HT_RET;
 
 /* External functions: these are what you must define */
@@ -63,6 +65,9 @@ HT_RET ht_insert(char *key, char *val);
 
 // Tries to lookup a value given a key; found val should set the 2nd parameter
 HT_RET ht_lookup(char *key, char **val);
+
+// Tries to delete a key-value pair specified by the parameter
+HT_RET ht_delete(char *key);
 
 /* End of API declaration */
 
