@@ -1,4 +1,4 @@
-# Writing a multi-threaded in-memory key-value store
+# Building a multi-threaded in-memory key-value store
 
 In this project, you'll be building a simplified in-memory key-value store (KVS). While somewhat easier to implement a classic chained hash table, there are still numerous challenges, mostly in building the correct concurrency support. Thus, you'll have to think a bit about how to build the KVS implementation, and then build it to work efficiently and correctly.
 
