@@ -76,6 +76,78 @@ HT_RET ht_delete(char *key);
 
 One basic assumption is that, when a user is writing his/her own application with your in-memory KVS library, they will create multiple threads that concurrently access (with both the read and write operations) your KVS implemented in the library. Therefore, it is necessary for your library to use pthread locks and/or CVs to provide mutually exclusive access for concurrent `ht_insert()` and `ht_lookup()` operations. More on this below.
 
+## Simple Application Example
+
+Here is a simple (but functional) user application program, written to use our in-memory KVS library: 
+
+```
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include "imkv.h"
+
+typedef struct {
+    size_t tid;
+    size_t num_ops;
+} thread_param;
+
+void Map(char *file_name) {
+    FILE *fp = fopen(file_name, "r");
+    assert(fp != NULL);
+
+    char *line = NULL;
+    size_t size = 0;
+    while (getline(&line, &size, fp) != -1) {
+        char *token, *dummy = line;
+        while ((token = strsep(&dummy, " \t\n\r")) != NULL) {
+            MR_Emit(token, "1");
+        }
+    }
+    free(line);
+    fclose(fp);
+}
+
+void Reduce(char *key, Getter get_next, int partition_number) {
+    int count = 0;
+    char *value;
+    while ((value = get_next(key, partition_number)) != NULL)
+        count++;
+    printf("%s %d\n", key, count);
+}
+
+void *ht_access(void *arg) {
+    thread_param *p = (thread_param *)arg;
+    for (int i = 0; i < p->num_ops; i++) {
+        int op = rand() % 2;
+	if (op == 0) {
+	    ht_insert(rand() % 100000, );
+	} else if (op == 1) {
+	    ht_lookup()
+	}
+    }
+}
+
+int main(int argc, char *argv[]) {
+    int num_threads = 8;
+    int num_queries = 100000;
+    pthread_t threads[num_threads];
+    thread_param tp[num_threads];
+    size_t t;
+    for (t = 0; t < num_threads; t++) {
+        tp[t].tid     = t;
+        tp[t].num_ops = num_queries;
+        int rc = pthread_create(&threads[t], NULL, ht_access, (void *) &tp[t]);
+        if (rc) {
+            perror("failed: pthread_create\n");
+            exit(-1);
+        }
+    }
+}
+```
+
+
 ## Considerations
 
 Here are a few things to consider in your implementation:
